@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js">
+</script>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="container">
+    <div class="title">Registration</div>
+    <div class="content">
+      <form>
+        <div class="form-group">
+          <div class="input-box">
+            <label class="details" for="name">Full Name</label>
+            <input type="text" placeholder="Enter your name" name="name" id="name" required>
+          </div>
+          <div class="input-box">
+            <label class="details" for="number">Phone Number</label>
+            <input type="text" placeholder="Enter your Number" name="number" id="number" required>
+          </div>
+          <div class="input-box">
+            <label class="details" for="email">Email</label>
+            <input type="text" placeholder="Enter your Email" name="email" id="email" required>
+          </div>
+          <div class="input-box">
+            <label class="details" for="multiple">Number of Customers</label>
+            <select name="multiple" id="multiple">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>              
+            </select>
+          </div>
+          </div>
+          <div class="gender-details">
+            <input type="radio" name="gender" value="m" id="dot-1">
+            <input type="radio" name="gender" value="f" id="dot-2">
+            <input type="radio" name="gender" value="o" id="dot-3">
+            <span class="gender-title" for="gender">Gender</span>
+            <div class="category">
+              <label for="dot-1">
+              <span class="dot one"></span>
+              <span class="gender">Male</span>
+            </label>
+            <label for="dot-2">
+              <span class="dot two"></span>
+              <span class="gender">Female</span>
+            </label>
+            <label for="dot-3">
+              <span class="dot three"></span>
+              <span class="gender">Prefer not to say</span>
+              </label>
+            </div>
+            </div>
+        <div>
+          <div class="button">
+            <input type="button" value="Register and Pay" onclick="MakePayment()">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+    function MakePayment() {
+      var name = $("#name").val();
+      var email = $("#email").val();
+      var number = $("#number").val();
+      var amount = $("#multiple").val();
+      var gender = $('input[name="gender"]:checked').val();      
+      if ((name && email && number) == 0){
+		alert("Please fill in the required fields");
+		rzp1.close();
+	  }
+      var options = {
+        "key": "ENTER_KEY_HERE", // Enter the Key ID generated from the Dashboard (testkey)
+        "amount": amount*2500, // Amount is in currency subunits. Default currency is INR. Hence, 25000 refers to 25000 paise
+        "currency": "INR",
+        "name": "Your Name",
+        "description": "E-Ticket Transaction",
+        "handler": function (response) {
+          localStorage.setItem("payid", response.razorpay_payment_id);
+          localStorage.setItem("nameqr", name);
+          localStorage.setItem("people", amount);
+          jQuery.ajax({    // Use jQuery to send data to from the web page to php via POST
+            type: "POST",
+            url: "payment.php",
+            data: "pay_id=" + response.razorpay_payment_id + "&email=" + email + "&name=" + name + "&number=" + number + "&amount=" + amount + "&gender=" + gender,
+            success: function (result) {
+              window.location.href = "success.html";
+            }
+          })
+        },
+        "prefill": {
+          "name": "Your Name",
+          "email": "something@gmail.com",
+          "contact": "Phone Number"
+        },
+        "notes": {
+          "address": "Null"
+        },
+        "theme": {
+          "color": "#3399cc"
+        }
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/eticket.css">
+  <meta name="viewport" content="width=1024">
+</head>
+<script>
+  var receive = localStorage.getItem("payid");
+  window.onload = function () {
+    document.getElementById('qrcode').src = 'http://api.qrserver.com/v1/create-qr-code/?data=' + receive + '&amp;size=150x150"';
+  };
+</script>
+
+<body>
+  <div class="ticket" id="ticket">
+    <div class="stub">
+      <div class="top">
+        <span class="admit">Admit</span>
+        <span class="line"></span>
+        <span class="num">
+          <span><img class="qrcode" id="qrcode" src="" width="150" height="121" /></span>
+        </span>
+      </div>
+      <div class="invite">
+		<body>
+			<div></div>
+			  <div class="title"><div><span id="invite"></span></div></div>
+			  <script>
+				//recieve name
+				var rec = localStorage.getItem("nameqr");
+				document.getElementById("invite").innerHTML = rec;
+			  </script>
+		</body>
+      </div>
+    </div>
+    <div class="check">
+      <div class="big">
+        Welcome <br> To <br> Museum X
+      </div>
+      <div class="number">
+		<body>
+			<div></div>
+			  <div class="title"><div><span id="number"></span></div></div>
+			  <script>
+				//recieve number of people
+				var peprec = localStorage.getItem("people");
+				document.getElementById("number").innerHTML = peprec;
+			  </script>
+		</body>
+      </div>
+      <div class="info">
+        <section>
+          <body>
+			  <div class="title">Date:<div><span id="date"></span></div></div>
+			  <script>
+				var today = new Date();
+				var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+				document.getElementById("date").innerHTML = date;
+			  </script>
+		</body>
+        </section>
+        <section>
+			<body>
+				<div class="title">Issued By:<div><span id="issue"></span></div></div>
+				<script>document.getElementById("issue").innerHTML = "Kota Inc.";</script>
+			</body>
+        </section>
+        <section>
+          <body>
+			  <div class="title">Ticket No:<div><span id="invitenum"></span></div></div>
+			  <script>
+				var today = new Date();
+				var date = today.getFullYear()+""+(today.getMonth()+1)+""+today.getDate();
+				var time = today.getHours() + "" + today.getMinutes() + "" + today.getSeconds();
+				var dateTime = date+time;
+				document.getElementById("invitenum").innerHTML = dateTime;
+			  </script>
+		</body>
+        </section>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
